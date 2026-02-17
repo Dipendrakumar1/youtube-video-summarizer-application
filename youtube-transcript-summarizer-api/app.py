@@ -20,7 +20,8 @@ app = Flask(__name__)
 
 # Production CORS setup
 allowed_origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
-CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
+# Use a more flexible regex for resources
+CORS(app, resources={r"/api*": {"origins": allowed_origins}})
 
 
 def get_video_id(url):
@@ -45,7 +46,7 @@ def get_video_id(url):
     return None
 
 
-@app.route('/api/', methods=['GET'])
+@app.route('/api/', methods=['GET'], strict_slashes=False)
 def respond():
     # Retrieve the video_url from url parameter
     video_url = request.args.get("video_url", None)
