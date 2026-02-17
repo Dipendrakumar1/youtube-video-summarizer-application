@@ -1,0 +1,7 @@
+spacy
+flask
+flask-cors
+youtube-transcript-api
+deep-translator
+nltk
+pytest
