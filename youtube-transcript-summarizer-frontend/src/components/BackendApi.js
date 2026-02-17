@@ -41,7 +41,8 @@ class BackendAPI extends React.Component {
 			isLoaded: false
 		});
 
-		var FinalURL = `http://127.0.0.1:5001/api/?video_url=${this.state.name}`;
+		const apiBaseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001/api/';
+		var FinalURL = `${apiBaseUrl}?video_url=${this.state.name}`;
 
 		fetch(FinalURL)
 			.then(res => res.json())

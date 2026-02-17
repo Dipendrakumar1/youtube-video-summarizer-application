@@ -1,15 +1,26 @@
-"""
-Project Name: YouTube Transcript Summarizer
-YouTube Transcript Summarizer API
-"""
-
+import os
+import logging
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from urllib.parse import urlparse, parse_qs
 from video_summarizer import summarize_video_universal
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-CORS(app)
+
+# Production CORS setup
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
 
 
 def get_video_id(url):
@@ -48,6 +59,7 @@ def respond():
         }), 400
 
     try:
+        logger.info(f"Processing video: {video_url}")
         summary_data = summarize_video_universal(video_url, video_id)
         
         if not summary_data:
@@ -65,7 +77,7 @@ def respond():
         })
 
     except Exception as e:
-        print(f"Error processing video: {e}")
+        logger.error(f"Error processing video {video_url}: {e}")
         return jsonify({
             "status": "Failed",
             "message": "An internal error occurred."
@@ -81,5 +93,14 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(threaded=True, debug=True, port=5001)
+    port = int(os.getenv("PORT", 5001))
+    debug = os.getenv("FLASK_DEBUG", "False").lower() == "true"
+    
+    if debug:
+        app.run(threaded=True, debug=True, port=port)
+    else:
+        # Production server
+        from waitress import serve
+        logger.info(f"Starting production server on port {port}")
+        serve(app, host="0.0.0.0", port=port)
 

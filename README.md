@@ -48,7 +48,7 @@ graph TD
 -   **Downloadable Output**: Save summaries as text files for offline reference.
 -   **Cross-Platform**: Accessible via web app or browser extension.
 
-## ⚙️ Installation
+## ⚙️ Installation & Development
 
 ### 1. Clone the repository
 ```bash
@@ -71,10 +71,15 @@ cd youtube-video-summarizer-app
     ```bash
     pip install -r requirements.txt
     ```
-4.  Run the API:
-    ```bash
-    python app.py
+4.  (Optional) Create a `.env` file:
+    ```env
+    PORT=5001
+    FLASK_DEBUG=False
+    ALLOWED_ORIGINS=http://localhost:3000
     ```
+5.  Run the API:
+    -   **Development**: `python app.py` (with `FLASK_DEBUG=True`)
+    -   **Production**: `python app.py` (with `FLASK_DEBUG=False`) or `gunicorn app:app` (on Linux).
 
 ### 3. Frontend Setup
 1.  Navigate to the frontend folder:
@@ -85,10 +90,38 @@ cd youtube-video-summarizer-app
     ```bash
     npm install
     ```
-3.  Start the app:
-    ```bash
-    npm start
+3.  Create a `.env` file:
+    ```env
+    REACT_APP_API_URL=http://localhost:5001/api/
     ```
+4.  Start/Build the app:
+    -   **Development**: `npm start`
+    -   **Production**: `npm run build`
+
+## 🚀 Production Deployment
+
+### 1. Backend on Render
+1.  **Create New Web Service**: Connect your GitHub repository.
+2.  **Root Directory**: Set to `youtube-transcript-summarizer-api`.
+3.  **Environment**: select `Python`.
+4.  **Build Command**: `pip install -r requirements.txt`
+5.  **Start Command**: `gunicorn app:app` (Render often detects the `Procfile` automatically).
+6.  **Environment Variables**:
+    - `PYTHON_VERSION`: `3.9.0` (or higher).
+    - `FLASK_DEBUG`: `False`.
+    - `ALLOWED_ORIGINS`: `https://your-frontend-link.vercel.app` (Add your Vercel URL here after deployment).
+    - `PORT`: `10000` (Render's default).
+
+### 2. Frontend on Vercel
+1.  **New Project**: Connect your GitHub repository.
+2.  **Root Directory**: Set to `youtube-transcript-summarizer-frontend`.
+3.  **Framework Preset**: `Create React App`.
+4.  **Environment Variables**:
+    - `REACT_APP_API_URL`: `https://your-backend-link.onrender.com/api/` (Add your Render URL here).
+5.  **Deploy**: Vercel will automatically run `npm run build` and serve the files.
+
+> [!TIP]
+> Always deploy the **Backend first** to get the Render URL, then use that URL in the Frontend's `REACT_APP_API_URL` variable. Once the Frontend is deployed, go back to Render and update `ALLOWED_ORIGINS` with the Vercel URL to secure your API.
 
 ## 📝 Scope and Limitations
 -   **Video Length**: The system handles videos of any length, though extremely long videos may take longer to process via STT.
@@ -105,5 +138,4 @@ Contributions are what make the open-source community such an amazing place to l
 5. Open a Pull Request
 
 ## 👤 Authors
--   **[@Virag_Patel](https://www.github.com/19IT114)**
 -   **[@Dipendrakumar1](https://github.com/Dipendrakumar1)**

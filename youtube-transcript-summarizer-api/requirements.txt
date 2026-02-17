@@ -5,3 +5,11 @@ youtube-transcript-api
 deep-translator
 nltk
 pytest
+yt-dlp
+openai-whisper
+torch
+imageio
+imageio-ffmpeg
+gunicorn
+waitress
+python-dotenv
