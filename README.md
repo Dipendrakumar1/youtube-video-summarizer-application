@@ -107,10 +107,10 @@ cd youtube-video-summarizer-app
 4.  **Build Command**: `pip install -r requirements.txt`
 5.  **Start Command**: `gunicorn app:app` (Render often detects the `Procfile` automatically).
 6.  **Environment Variables**:
-    - `PYTHON_VERSION`: `3.9.0` (or higher).
+    - `PYTHON_VERSION`: `3.10.12` (CRITICAL: Do not use 3.14 or greater).
     - `FLASK_DEBUG`: `False`.
-    - `ALLOWED_ORIGINS`: `https://your-frontend-link.vercel.app` (Add your Vercel URL here after deployment).
-    - `PORT`: `10000` (Render's default).
+    - `ALLOWED_ORIGINS`: `https://your-frontend-link.vercel.app`.
+    - `PORT`: `10000`.
 
 ### 2. Frontend on Vercel
 1.  **New Project**: Connect your GitHub repository.
@@ -118,6 +118,7 @@ cd youtube-video-summarizer-app
 3.  **Framework Preset**: `Create React App`.
 4.  **Environment Variables**:
     - `REACT_APP_API_URL`: `https://your-backend-link.onrender.com/api/` (Add your Render URL here).
+    - `NODE_OPTIONS`: `--openssl-legacy-provider` (REQUIRED for Node 17+ compatibility).
 5.  **Deploy**: Vercel will automatically run `npm run build` and serve the files.
 
 > [!TIP]
